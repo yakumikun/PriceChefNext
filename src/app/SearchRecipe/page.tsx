@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import RecipeList from '../../components/RecipeList';
 import ShoppingListSidebar from '../../components/ShoppingListSidebar';
-import useSupermarketSearch from '@/hooks/useSupermarketSearch';
-import RecipePostPopup from '@/components/RecipePost';
+import useSupermarketSearch from '../../hooks/useSupermarketSearch';
+import RecipePostPopup from '../../components/RecipePost';
 
 const Page: React.FC = () => {
   const [shoppingList, setShoppingList] = useState<string[]>([]);

@@ -1,5 +1,5 @@
 import React from 'react'
-import { useShoppingList } from '@/hooks/useShoppingList'
+import { useShoppingList } from '../hooks/useShoppingList'
 
 interface ShoppingListSidebarProps {
     isVisible: boolean;

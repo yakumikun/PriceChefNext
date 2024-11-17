@@ -1,8 +1,9 @@
 "use client"
 
+import React from "react";
 import SearchProducts from "../components/SearchProducts";
-import MainPage from "@/components/MainPage";
-import LocationButton from "@/components/LocationButton";
+import MainPage from "../components/MainPage";
+import LocationButton from "../components/LocationButton";
 
 export default function Home() {
   return (
