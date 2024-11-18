@@ -1,25 +1,56 @@
 import { NextResponse } from 'next/server';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { db } from '../../../lib/db';
+
+const s3 = new S3Client({
+    region: 'ap-northeast-1',
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    },
+});
+
+async function uploadToS3(file: Buffer, fileName: string): Promise<string> {
+    const bucketName = process.env.AWS_BUCKET_NAME!;
+
+    const command = new PutObjectCommand({
+        Bucket: bucketName,
+        Key: fileName,
+        Body: file,
+        ContentType: 'image/jpeg',
+        ACL: 'public-read',
+    });
+
+    await s3.send(command);
+
+    return `https://${bucketName}.s3.amazonaws.com/${fileName}`;
+}
 
 
 export async function POST(req: Request) {
     try {
-        const { name, image_url, instructions, ingredients } = await req.json();
+        const { name, instructions, ingredients, image } = await req.json();
 
-        // 必須項目がすべてあるか確認
-        if (!name || !image_url || !instructions || !ingredients) {
+        if (!name || !instructions || !ingredients || !image) {
             return NextResponse.json({ error: 'すべての項目を入力してください' }, { status: 400 });
         }
 
-        // データベースにレシピを挿入
-        const result = await db.query(
-            'INSERT INTO Recipe (name, image_url, instructions, ingredients) VALUES ($1, $2, $3, $4) RETURNING *',
-            [name, image_url, instructions, ingredients]
-        );
+        const buffer = Buffer.from(image, 'base64');
+        const imageFileName = `${Date.now()}-recipe.png`;
+        const imageUrl = await uploadToS3(buffer, imageFileName);
 
-        return NextResponse.json({ recipe: result.rows[0] }, { status: 201 });
+        const result = await db.recipe.create({
+            data: {
+                name,
+                image_url: imageUrl,
+                instructions,
+                ingredients,
+            },
+        })
+
+        return NextResponse.json({ recipe: result }, { status: 201 });
     } catch (error) {
-        console.error(error);
-        return NextResponse.json({ error: 'エラーが発生しました' }, { status: 500 });
+        console.error('Error in POST /api/recipe:', error.message, error.stack);
+        return NextResponse.json({ error: 'エラーが発生しました', details: error.message }, { status: 500 });
     }
 }

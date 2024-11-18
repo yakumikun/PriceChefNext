@@ -1,40 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Recipe } from '../lib/db';
 import RecipePopup from './RecipePopup';
 
-const recipes: Recipe[] = [
-  {
-    id: 1,
-    name: 'スパゲッティ',
-    image: 'https://via.placeholder.com/150',
-    ingredients: ['パスタ', 'トマトソース', 'バジル'],
-    instructions: 'パスタを茹でて、トマトソースを混ぜます。',
-  },
-  {
-    id: 2,
-    name: 'カレーライス',
-    image: 'https://via.placeholder.com/150',
-    ingredients: ['米', 'カレールウ', '野菜'],
-    instructions: '米を炊き、カレールウを煮込みます。',
-  },
-  {
-    id: 3,
-    name: 'カルボナーラ',
-    image: 'https://via.placeholder.com/150',
-    ingredients: ['パスタ', '生卵', 'ベーコン', 'チーズ'],
-    instructions: 'ベーコンを焼き、水を入れてパスタを茹で、チーズ・溶き卵と和えます。',
-  },
-  {
-    id: 4,
-    name: 'ポークソテー',
-    image: 'https://via.placeholder.com/150',
-    ingredients: ['豚肉', 'キャベツ', 'にんにく', 'ケチャップ', 'ウスターソース'],
-    instructions: 'ニンニクの香りを付けた油で豚肉とキャベツを炒め、ソースを絡めます。',
-  },
-];
 
 const RecipeList: React.FC<{ onAddToShoppingList: (ingredients: string[]) => void }> = ({ onAddToShoppingList }) => {
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+
+  useEffect(() => {
+    const fetchRecipes = async () => {
+      const res = await fetch('/api/recipes'); // すべてのレシピを取得するAPIルート
+      const data = await res.json();
+      setRecipes(data.recipes);
+    };
+
+    fetchRecipes();
+  }, []);
 
   const handleRecipeSelect = (recipe: Recipe) => {
     setSelectedRecipe(recipe);

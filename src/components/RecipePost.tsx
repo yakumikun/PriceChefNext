@@ -12,6 +12,7 @@ const RecipePostPopup: React.FC<RecipePostPopupProps> = ({ onClose }) => {
     const [ingredients, setIngredients] = useState<string[]>(['']);
     const [instructions, setInstructions] = useState<string[]>(['']);
     const [error, setError] = useState('');
+    const [base64Image, setBase64Image] = useState<string | null>(null);
 
     const handleAddIngredient = () => setIngredients([...ingredients, '']);
     const handleRemoveIngredient = (index: number) =>
@@ -29,28 +30,43 @@ const RecipePostPopup: React.FC<RecipePostPopupProps> = ({ onClose }) => {
             return;
         }
 
-        try {
-            const formData = new FormData();
-            formData.append('file', image as Blob);
-            // 仮の画像アップロード (実際はS3等にアップロード)
-            const imageUrl = 'uploaded_image_url_placeholder';
+        if (!image) {
+            setError('画像が選択されていません。');
+            return;
+        }
 
-            const res = await fetch('/api/recipes', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name,
-                    image_url: imageUrl,
-                    instructions,
-                    ingredients,
-                }),
-            });
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const result = reader.result?.toString();
+            if (result) {
+                const base64Image = result.split(',')[1]; // 画像をBase64に変換
+                setBase64Image(base64Image); // Base64画像を状態にセット
+            } else {
+                setError('画像の変換に失敗しました。');
+            }
+        };
 
-            if (!res.ok) throw new Error('投稿に失敗しました。');
+        reader.readAsDataURL(image);
 
-            onClose();
-        } catch (error) {
-            setError('エラーが発生しました。');
+        // Base64画像が設定されたら投稿処理
+        if (base64Image) {
+            try {
+                const res = await fetch('/api/recipe', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        image: base64Image,
+                        instructions,
+                        ingredients,
+                    }),
+                });
+
+                if (!res.ok) throw new Error('投稿に失敗しました。');
+                onClose(); // 投稿成功後、ポップアップを閉じる
+            } catch (error) {
+                setError('エラーが発生しました。');
+            }
         }
     };
 
@@ -136,12 +152,14 @@ const RecipePostPopup: React.FC<RecipePostPopupProps> = ({ onClose }) => {
                         + 手順を追加
                     </button>
                 </div>
-                <button
-                    onClick={handleSubmit}
-                    className="mt-4 bg-orange-500 text-white px-6 py-2 rounded"
-                >
-                    投稿する
-                </button>
+                <div className='flex justify-center'>
+                    <button
+                        onClick={handleSubmit}
+                        className="mt-4 bg-orange-500 text-white px-6 py-2 rounded"
+                    >
+                        投稿する
+                    </button>
+                </div>
             </div>
         </div>
     );

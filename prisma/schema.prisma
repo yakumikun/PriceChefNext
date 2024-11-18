@@ -21,3 +21,11 @@ model Product {
   sale      Boolean
   createdAt DateTime @default(now())
 }
+
+model Recipe {
+  id          Int      @id @default(autoincrement())
+  name        String
+  image       String
+  ingredients String[]
+  instructions String
+}
