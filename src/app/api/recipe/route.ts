@@ -18,7 +18,6 @@ async function uploadToS3(file: Buffer, fileName: string): Promise<string> {
         Key: fileName,
         Body: file,
         ContentType: 'image/jpeg',
-        ACL: 'public-read',
     });
 
     await s3.send(command);
@@ -42,7 +41,7 @@ export async function POST(req: Request) {
         const result = await db.recipe.create({
             data: {
                 name,
-                image_url: imageUrl,
+                image: imageUrl,
                 instructions,
                 ingredients,
             },
@@ -52,5 +51,15 @@ export async function POST(req: Request) {
     } catch (error) {
         console.error('Error in POST /api/recipe:', error.message, error.stack);
         return NextResponse.json({ error: 'エラーが発生しました', details: error.message }, { status: 500 });
+    }
+}
+
+export async function GET(req: Request) {
+    try {
+        const recipes = await db.recipe.findMany();
+        return NextResponse.json({ recipes }, { status: 200 });
+    } catch (error) {
+        console.error('Error in GET /api/recipe:', error.message, error.stack);
+        return NextResponse.json({ error: 'データの取得に失敗しました。', details: error.message }, { status: 500 });
     }
 }

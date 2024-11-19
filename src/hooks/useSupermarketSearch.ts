@@ -65,26 +65,29 @@ const useSupermarketSearch = () => {
                                             products: [],
                                         }));
 
-                                        supermarkets.forEach((supermarket, index) => {
-                                            fetch(`/api/products?storeName=${encodeURIComponent(supermarket.name)}`)
-                                                .then((response) => response.json())
-                                                .then((data) => {
-                                                    console.log('API Response:', data);
-                                                    const updatedSupermarket = { ...supermarket, products: data };
-                                                    setSupermarkets((prev) => {
-                                                        const updated = [...prev];
-                                                        updated[index] = updatedSupermarket;
-                                                        return updated;
-                                                    });
-                                                })
-                                                .catch((error) => {
-                                                    console.error("Error fetching products:", error);
-                                                    setError("商品の情報取得中にエラーが発生しました。");
-                                                });
-                                        });
+                                        const uniqueSupermarkets = supermarkets.filter((supermarket, index, self) =>
+                                            index === self.findIndex((t) => t.name === supermarket.name)
+                                        );
 
-                                        supermarkets.sort((a, b) => a.distanceValue - b.distanceValue);
-                                        setSupermarkets(supermarkets);
+                                        Promise.all(
+                                            uniqueSupermarkets.map((supermarket) =>
+                                                fetch(`/api/products?storeName=${encodeURIComponent(supermarket.name)}`)
+                                                    .then((response) => response.json())
+                                                    .then((data) => {
+                                                        console.log('API Response:', data);
+                                                        const updatedSupermarket = { ...supermarket, products: data };
+                                                        return updatedSupermarket;
+                                                    })
+                                                    .catch((error) => {
+                                                        console.error("Error fetching products:", error);
+                                                        setError("商品の情報取得中にエラーが発生しました。");
+                                                        return supermarket;
+                                                    })
+                                            )
+                                        ).then((updatedSupermarkets) => {
+                                            updatedSupermarkets.sort((a, b) => a.distanceValue - b.distanceValue);
+                                            setSupermarkets(updatedSupermarkets);
+                                        });
                                     })
                                     .catch((error) => {
                                         console.error("Error fetching distances:", error);

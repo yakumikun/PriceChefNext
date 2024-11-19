@@ -12,6 +12,7 @@ interface SupermarketOption {
 
 interface Product {
     name: string;
+    quantity: string;
     price: number;
     sale: boolean;
 }
@@ -22,9 +23,9 @@ const RegisterPricesForm: React.FC = () => {
     const [message, setMessage] = useState('');
     
 
-    const handleAddProduct = (name: string, price: number, sale: boolean) => {
+    const handleAddProduct = (name: string, quantity: string, price: number, sale: boolean) => {
         if (!name || price <= 0) return;
-        setProducts(prevProducts => [...prevProducts, { name, price, sale }]);
+        setProducts(prevProducts => [...prevProducts, { name, quantity, price, sale }]);
     };
 
     const handleRemoveProduct = (index: number) => {
@@ -74,7 +75,7 @@ const RegisterPricesForm: React.FC = () => {
                 <h3 className='text-center text-orange-600 text-xl font-semibold'>商品リスト</h3>
                 <ProductList products={products} onRemoveProduct={handleRemoveProduct} />
             </div>
-            <button type="submit" className='mx-60 border mt-5 mb-8 py-2 px-2 bg-orange-600 text-white font-bold rounded-md'>
+            <button type="submit" className='mx-80 border mt-5 mb-8 py-2 px-2 bg-orange-600 text-white font-bold rounded-md'>
                 登録する
             </button>
             {message && <p className='text-center text-red-500'>{message}</p>}

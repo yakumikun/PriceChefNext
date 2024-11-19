@@ -30,26 +30,16 @@ const RecipePostPopup: React.FC<RecipePostPopupProps> = ({ onClose }) => {
             return;
         }
 
-        if (!image) {
-            setError('画像が選択されていません。');
-            return;
-        }
-
         const reader = new FileReader();
-        reader.onloadend = () => {
+        reader.onloadend = async () => {
             const result = reader.result?.toString();
-            if (result) {
-                const base64Image = result.split(',')[1]; // 画像をBase64に変換
-                setBase64Image(base64Image); // Base64画像を状態にセット
-            } else {
+            if (!result) {
                 setError('画像の変換に失敗しました。');
+                return;
             }
-        };
 
-        reader.readAsDataURL(image);
-
-        // Base64画像が設定されたら投稿処理
-        if (base64Image) {
+            const base64Image = result.split(',')[1]; // 画像をBase64に変換
+            // setBase64Image(base64Image); // Base64画像を状態にセット
             try {
                 const res = await fetch('/api/recipe', {
                     method: 'POST',
@@ -63,11 +53,12 @@ const RecipePostPopup: React.FC<RecipePostPopupProps> = ({ onClose }) => {
                 });
 
                 if (!res.ok) throw new Error('投稿に失敗しました。');
-                onClose(); // 投稿成功後、ポップアップを閉じる
+                onClose(); 
             } catch (error) {
                 setError('エラーが発生しました。');
             }
-        }
+        };
+        reader.readAsDataURL(image);
     };
 
     return (

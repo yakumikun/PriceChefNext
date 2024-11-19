@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useShoppingList } from '@/hooks/useShoppingList';
 import ShoppingListSidebar from './ShoppingListSidebar';
 import Link from "next/link";
 import Image from "next/image";
@@ -20,7 +19,7 @@ const Header = (): JSX.Element => {
             <nav>
                 <ul className="flex space-x-8 items-center">
                     <li className="font-bold hover:text-green-400">
-                        <Link href="/">ログイン</Link>
+                        <Link href="/">ホーム</Link>
                     </li>
                     <li className="font-bold hover:text-green-400">
                         <Link href="/RegisterPrices">価格をシェア</Link>
@@ -46,7 +45,6 @@ const Header = (): JSX.Element => {
             <ShoppingListSidebar
                 isVisible={isSidebarVisible}
                 closeSidebar={() => setSidebarVisible(false)}
-                ingredients={[]}
             />
         </header>
     );

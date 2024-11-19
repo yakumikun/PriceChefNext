@@ -28,7 +28,7 @@ const SupermarketList: React.FC<SupermarketListProps> = ({ supermarketsInfo, sea
                 <p className='flex justify-center font-bold text-gray-500 min-w-full'>スーパー情報がありません。</p>
             ) : (
                 supermarketsInfo.map((supermarket) => (
-                    <div key={supermarket.supermarketId} className='border border-gray-300 mb-4 p-4 w-screen'>
+                    <div key={supermarket.supermarketId} className='border border-gray-300 mb-4 p-4'>
                         {/* スーパー情報 */}
                         <div className="flex items-center mb-4">
                             <div className="flex-1">

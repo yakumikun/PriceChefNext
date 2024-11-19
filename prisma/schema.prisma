@@ -17,6 +17,7 @@ model Product {
   id        Int      @id @default(autoincrement())
   storeName String
   name      String
+  quantity  String
   price     Float
   sale      Boolean
   createdAt DateTime @default(now())
@@ -27,5 +28,5 @@ model Recipe {
   name        String
   image       String
   ingredients String[]
-  instructions String
+  instructions String[]
 }

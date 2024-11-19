@@ -9,7 +9,7 @@ const RecipeList: React.FC<{ onAddToShoppingList: (ingredients: string[]) => voi
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      const res = await fetch('/api/recipes'); // すべてのレシピを取得するAPIルート
+      const res = await fetch('/api/recipe'); // すべてのレシピを取得するAPIルート
       const data = await res.json();
       setRecipes(data.recipes);
     };
@@ -30,12 +30,12 @@ const RecipeList: React.FC<{ onAddToShoppingList: (ingredients: string[]) => voi
       <h1 className="flex justify-center text-2xl text-orange-600 font-bold mb-4">レシピから探す</h1>
       <div className="grid grid-cols-3 gap-4 mx-auto max-w-xl">
         {recipes.map((recipe) => (
-          <div key={recipe.id} className="border p-4 rounded-lg shadow flex flex-col">
-            <img src={recipe.image} alt={recipe.name} className="mb-2" />
-            <h2 className="text-xl font-semibold">{recipe.name}</h2>
+          <div key={recipe.id} className="border rounded-lg shadow flex flex-col">
+            <img src={recipe.image} alt={recipe.name} className="mb-2 rounded-t-lg" />
+            <h2 className="text-xl font-semibold ml-2">{recipe.name}</h2>
             <button 
               onClick={() => handleRecipeSelect(recipe)} 
-              className="mt-2 bg-orange-600 text-white px-4 py-2 rounded mx-auto max-w-sm"
+              className="mt-2 bg-orange-600 text-white px-4 py-2 mb-2 rounded mx-auto max-w-sm"
             >
               詳細
             </button>

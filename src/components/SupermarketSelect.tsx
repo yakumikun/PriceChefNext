@@ -42,8 +42,8 @@ const SupermarketSelect: React.FC<SupermarketSelectProps> = ({ onStoreSelect }) 
 
             if (data.results) {
                 setOptions(
-                    data.results.map((result: { name: string, place_id: string }) => ({
-                        value: result.place_id,
+                    data.results.map((result: { name: string, id: string }) => ({
+                        value: result.id,
                         label: result.name,
                     }))
                 );
@@ -76,7 +76,7 @@ const SupermarketSelect: React.FC<SupermarketSelectProps> = ({ onStoreSelect }) 
     };
 
     return (
-        <div className='w-full min-w-64 mb-4'>
+        <div className='max-w-4xl mb-4'>
         <Select
           name='storeName'        
           options={options}

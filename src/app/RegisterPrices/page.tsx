@@ -220,10 +220,12 @@ import React from 'react';
 import RegisterPricesForm from '@/components/RegisterPricesForm';
 
 const RegisterPage: React.FC = () => (
-  <div className='mx-auto max-w-4xl'>
-    <h1 className='my-5 flex justify-center text-2xl text-orange-600 font-bold'>商品を登録しよう！</h1>
-    <div className='flex justify-center mx-auto max-w-2xl'>
-      <RegisterPricesForm />
+  <div>
+    <div className='mx-auto max-w-6xl'>
+      <h1 className='my-5 flex justify-center text-2xl text-orange-600 font-bold'>商品を登録しよう！</h1>
+      <div className='flex justify-center mx-auto max-w-4xl'>
+        <RegisterPricesForm />
+      </div>
     </div>
     <div className='bg-gray-100 h-auto max-h-max pb-12'>
       <div className='pt-4'>
