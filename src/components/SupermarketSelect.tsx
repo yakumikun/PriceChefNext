@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import Select, { SingleValue, StylesConfig } from 'react-select';
+import React from 'react';
+import { SearchableSelect } from '@/components/SearchableSelect';
 import { useLocation } from '../hooks/useLocation'
 
 interface SupermarketOption {
@@ -12,79 +12,34 @@ interface SupermarketSelectProps {
 }
 
 const SupermarketSelect: React.FC<SupermarketSelectProps> = ({ onStoreSelect }) => {
-    const [isClient, setIsClient] = useState(false);
     const { latitude, longitude } = useLocation();
-    
 
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    const [options, setOptions] = useState<SupermarketOption[]>([]);
-    const [inputValue, setInputValue] = useState('');
-
-    useEffect(() => {
-        if (latitude && longitude) {
-            fetchSupermarkets(inputValue, latitude, longitude);
-        }
-    }, [inputValue, latitude, longitude]);
-
-    if (!isClient) {
-        return null;
-    }
-
-    const fetchSupermarkets = async (inputValue: string, lat: string | null, lng: string | null) => {
-        if (!inputValue || !lat || !lng) return setOptions([]);
-
+    const fetchSupermarkets = async (inputValue: string): Promise<SupermarketOption[]> => {
+        if (!latitude || !longitude) return [];
         try {
-            const response = await fetch(`/api/searchSupermarkets?query=${encodeURIComponent(inputValue)}&lat=${latitude}&lng=${longitude}`);
-            const data = await response.json();
-
-            if (data.results) {
-                setOptions(
-                    data.results.map((result: { name: string, id: string }) => ({
-                        value: result.id,
-                        label: result.name,
-                    }))
-                );
-            } else {
-                setOptions([]);
-            }
+          const response = await fetch(
+            `/api/searchSupermarkets?query=${encodeURIComponent(inputValue)}&lat=${latitude}&lng=${longitude}`
+          );
+          const data = await response.json();
+          return data.results
+            ? data.results.map((result: { name: string; id: string }) => ({
+                value: result.id,
+                label: result.name,
+              }))
+            : [];
         } catch (error) {
-            console.error('Error fetching supermarkets:', error);
-            setOptions([]);
+          console.error('Error fetching supermarkets:', error);
+          return [];
         }
-    };
-
-    const handleInputChange = (inputValue: string) => {
-        setInputValue(inputValue);
-    };
-
-    const handleOptionChange = (selectedOption: SingleValue<SupermarketOption>) => {
-        onStoreSelect(selectedOption);
-    }
-
-    const customStyles: StylesConfig<SupermarketOption, false> = {
-        control: (provided) => ({
-            ...provided,
-            borderColor: '#ccc',
-            boxShadow: 'none',
-            '&:hover': {
-                borderColor: '#ff9800',
-            },
-        }),
-    };
-
+};    
     return (
         <div className='max-w-4xl mb-4'>
-        <Select
-          name='storeName'        
-          options={options}
-          onChange={handleOptionChange}
-          onInputChange={handleInputChange}
+        <SearchableSelect       
+          options={[]}
+          fetchOptions={fetchSupermarkets}
+          onFocus={() => fetchSupermarkets('')}
+          onChange={onStoreSelect}
           placeholder="店舗名を選択"
-          className="w-full"
-          styles={customStyles}
         />
       </div>
     );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Recipe } from '../lib/db';
+import { Recipe } from '../lib/prisma';
 import RecipePopup from './RecipePopup';
 
 

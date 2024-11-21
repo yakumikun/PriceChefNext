@@ -23,6 +23,13 @@ model Product {
   createdAt DateTime @default(now())
 }
 
+model MinistryPrice {
+  id        Int      @id @default(autoincrement())
+  name      String
+  price     Float
+  updatedAt DateTime @updatedAt
+}
+
 model Recipe {
   id          Int      @id @default(autoincrement())
   name        String

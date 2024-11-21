@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
-import { db } from '../../../lib/db';
+import { db } from '../../../lib/prisma';
 
 const s3 = new S3Client({
     region: 'ap-northeast-1',

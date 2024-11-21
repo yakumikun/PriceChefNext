@@ -1,70 +1,33 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/db'; // データベース接続用
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
-export async function GET(req: NextRequest) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const storeName = searchParams.get('storeName'); // storeName を使う
-
-    console.log('Store Name:', storeName);
+export async function GET(request: Request) {
+    const { searchParams } = new URL(request.url);
+    const storeName = searchParams.get("storeName");
 
     if (!storeName) {
-      console.error('Error: storeName is missing');
-      return NextResponse.json({ error: 'storeName is required' }, { status: 400 });
+        return NextResponse.json({ error: "storeName is required" }, { status: 400 });
     }
 
-    const products = await db.product.findMany({
-      where: { storeName }, // storeName を条件に検索
-    });
+    try {
+        // 商品データを取得
+        const products = await prisma.product.findMany({
+            where: { storeName },
+        });
 
-    console.log('Fetched products:', products);
+        // MinistryPriceを取得して比較
+        const ministryPrices = await prisma.ministryPrice.findMany();
+        const priceMap = new Map(ministryPrices.map((item) => [item.name, item.price]));
 
-    if (!products || products.length === 0) {
-      return NextResponse.json({ error: 'No products found' }, { status: 404 });
+        // 比較して`isCheaper`フラグを追加
+        const updatedProducts = products.map((product) => ({
+            ...product,
+            isCheaper: product.price < (priceMap.get(product.name) || Infinity),
+        }));
+
+        return NextResponse.json(updatedProducts);
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
-
-    return NextResponse.json(products);
-  } catch (error) {
-    console.error('Error in GET /api/products:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-  }
 }
-
-
-// export async function GET(req: NextRequest) {
-//     try {
-//         const { searchParams } = new URL(req.url);
-//         const storeName = searchParams.get('storeName'); // storeName を使う
-
-//         console.log('Store Name:', storeName);
-
-//         if (!storeName) {
-//             console.error('Error: storeName is missing');
-//             return NextResponse.json({ error: 'storeName is required' }, { status: 400 });
-//         }
-
-//         const products = await db.product.findMany({
-//             where: { storeName }, // storeName を条件に検索
-//         });
-
-//         const uniqueProducts = products.filter((value, index, self) => 
-//             index === self.findIndex((t) => (
-//                 t.storeName === value.storeName
-//             ))
-//         );
-
-//         console.log('Unique products:', uniqueProducts);
-
-
-//         console.log('Fetched products:', products);
-
-//         if (!products || products.length === 0) {
-//             return NextResponse.json({ error: 'No products found' }, { status: 404 });
-//         }
-
-//         return NextResponse.json(uniqueProducts);
-//     } catch (error) {
-//         console.error('Error in GET /api/products:', error);
-//         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-//     }
-// }

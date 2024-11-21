@@ -1,5 +1,5 @@
 import React from 'react';
-import { Recipe } from '../lib/db';
+import { Recipe } from '../lib/prisma';
 
 interface RecipePopupProps {
     recipe: Recipe;
