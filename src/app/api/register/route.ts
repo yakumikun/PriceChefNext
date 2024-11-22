@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { db } from '@/lib/prisma';
+import { prisma } from '@/lib/prisma';
 
 export async function POST(req: NextRequest) {
 
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
         // 商品登録処理
         const createdProducts = await Promise.all(
             products.map((product:  { name: string; quantity: string, price: number; sale: boolean }) =>
-                db.product.create({
+                prisma.product.create({
                     data: {
                         storeName,
                         name: product.name,
