@@ -47,7 +47,7 @@ const Page: React.FC = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <div className="flex-grow">
         <RecipeList onAddToShoppingList={handleAddToShoppingList} />
       </div>

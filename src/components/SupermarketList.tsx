@@ -46,7 +46,7 @@ const SupermarketList: React.FC<SupermarketListProps> = ({ supermarketsInfo, sea
                                         .map((product) => (
                                             <div key={product.id} className="min-w-[220px] flex flex-col p-4 border border-gray-300 font-extrabold">
                                                 <p className="text-lg text-black text-left">{product.name}</p>
-                                                <p className="text-red-600 font-bold text-2xl text-right">{product.price}円</p>
+                                                <p className="italic text-red-600 font-bold text-4xl text-right">{product.price}<span className='text-xl not-italic ml-1'>円</span></p>
                                             </div>
                                         ))}
                                 </div>

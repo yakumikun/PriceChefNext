@@ -11,7 +11,7 @@ const Header = (): JSX.Element => {
     return (
         <header className="bg-orange-600 text-white font-bold flex justify-between items-center p-4">
             <div>
-                <Link href="/tech">
+                <Link href="/">
                     <h1 className="text-4xl my-">PriceChef</h1>
                 </Link>
             </div>
@@ -19,7 +19,7 @@ const Header = (): JSX.Element => {
             <nav>
                 <ul className="flex space-x-8 items-center">
                     <li className="font-bold hover:text-green-400">
-                        <Link href="/tech">ホーム</Link>
+                        <Link href="/">ホーム</Link>
                     </li>
                     <li className="font-bold hover:text-green-400">
                         <Link href="/RegisterPrices">価格をシェア</Link>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { SearchableSelect } from '@/components/SearchableSelect';
+import { SearchableSelect } from '../components/SearchableSelect';
 import { useLocation } from '../hooks/useLocation'
 
 interface SupermarketOption {

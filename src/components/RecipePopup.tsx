@@ -1,5 +1,5 @@
 import React from 'react';
-import { Recipe } from '@/app/types/Recipe';
+import { Recipe } from '../app/types/Recipe';
 
 interface RecipePopupProps {
     recipe: Recipe;
