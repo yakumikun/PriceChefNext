@@ -53,7 +53,7 @@ const RecipePostPopup: React.FC<RecipePostPopupProps> = ({ onClose }) => {
 
                 if (!res.ok) throw new Error('投稿に失敗しました。');
                 onClose(); 
-            } catch (error) {
+            } catch {
                 setError('エラーが発生しました。');
             }
         };
