@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Select, { SingleValue, StylesConfig } from 'react-select';
 
-interface Option {
-  value: string;
-  label: string;
-}
-
 interface SearchableSelectProps<T> {
   options: T[];
   fetchOptions: (inputValue: string) => Promise<T[]>;

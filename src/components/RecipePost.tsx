@@ -12,7 +12,6 @@ const RecipePostPopup: React.FC<RecipePostPopupProps> = ({ onClose }) => {
     const [ingredients, setIngredients] = useState<string[]>(['']);
     const [instructions, setInstructions] = useState<string[]>(['']);
     const [error, setError] = useState('');
-    const [base64Image, setBase64Image] = useState<string | null>(null);
 
     const handleAddIngredient = () => setIngredients([...ingredients, '']);
     const handleRemoveIngredient = (index: number) =>

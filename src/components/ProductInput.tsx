@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface Product {
     name: string;
@@ -12,7 +12,7 @@ interface Product {
     onRemove: () => void;
   }
 
-const ProductInput: React.FC<ProductInputProps> = ({ product, onProductChange, onRemove }) => {
+const ProductInput: React.FC<ProductInputProps> = ({ product, onProductChange }) => {
   return (
     <div className="product-input">
       <input

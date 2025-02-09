@@ -16,7 +16,7 @@ interface Supermarket {
     name: string;
     distance: string;
     distanceValue: number;
-    products: any[];
+    products: unknown[];
 }
 
 const useSupermarketSearch = () => {
