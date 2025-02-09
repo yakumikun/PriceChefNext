@@ -11,12 +11,20 @@ interface Result {
     };
 }
 
+type Product = {
+    id: string;
+    name: string;
+    price: number;
+    sale: boolean;
+    isCheaper: boolean;
+};
+
 interface Supermarket {
     supermarketId: string;
     name: string;
     distance: string;
     distanceValue: number;
-    products: unknown[];
+    products: Product[];
 }
 
 const useSupermarketSearch = () => {
@@ -75,7 +83,7 @@ const useSupermarketSearch = () => {
                                                     .then((response) => response.json())
                                                     .then((data) => {
                                                         console.log('API Response:', data);
-                                                        const updatedSupermarket = { ...supermarket, products: data };
+                                                        const updatedSupermarket = { ...supermarket, products: data as Product[] };
                                                         return updatedSupermarket;
                                                     })
                                                     .catch((error) => {
