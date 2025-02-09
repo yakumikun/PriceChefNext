@@ -1,8 +1,12 @@
 {
-    "build": {
-      "env": {
-        "NEXT_PUBLIC_LINT": "true"
-      }
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
     }
+  ],
+  "env": {
+    "DATABASE_URL": "postgresql://ryoga:4849@localhost:5432/pricechef_database?schema=public",
+    "NEXT_PUBLIC_LINT": "true"
   }
-  
+}
